@@ -1,5 +1,7 @@
 ```
- $ gmake
+» env CC="gcc" CFLAGS="-Ofast -march=native" gmake
+         CC set to "gcc"
+         CFLAGS set to "-Ofast -march=native"
          Make divmnu-original ...
          Make divmnu-sub_mul_borrow ...
          Make divmnu-mul_rsub_carry ...
@@ -8,13 +10,13 @@
          Make divmnu-mul_rsub_carry_2stage_1 ...
          Make divmnu-mul_rsub_carry_2stage_2 ...
          Make divmnu-madded_subfe ...
-         Test divmnu-original .................. 0:10.44
-         Test divmnu-sub_mul_borrow ............ 0:10.80
-         Test divmnu-mul_rsub_carry ............ 0:10.58
-         Test divmnu-sub_mul_borrow_2stage ..... 0:11.09
-         Test divmnu-mul_rsub_carry_2stage_0 ... 0:12.14
-         Test divmnu-mul_rsub_carry_2stage_1 ... 0:11.08
-         Test divmnu-mul_rsub_carry_2stage_2 ... 0:12.36
-         Test divmnu-madded_subfe .............. 0:11.66
+         Test divmnu-original .................. 0:10.71
+         Test divmnu-sub_mul_borrow ............ 0:10.53
+         Test divmnu-mul_rsub_carry ............ 0:10.81
+         Test divmnu-sub_mul_borrow_2stage ..... 0:11.58
+         Test divmnu-mul_rsub_carry_2stage_0 ... 0:11.84
+         Test divmnu-mul_rsub_carry_2stage_1 ... 0:12.54
+         Test divmnu-mul_rsub_carry_2stage_2 ... 0:12.38
+         Test divmnu-madded_subfe .............. 0:11.29
          Test completed successfully!
 ```
