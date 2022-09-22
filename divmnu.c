@@ -688,7 +688,7 @@ check (unsigned q[], unsigned r[], unsigned u[], unsigned v[], int m, int n,
         {
           if (l == 1)
             {
-              (void)fprintf (stderr, "\n");
+              (void)fprintf (stderr, "\n\n");
               dumpit ("FATAL ERROR: dividend u =", m, u);
               dumpit ("             divisor  v =", n, v);
               dumpit ("              remainder =", m - n + 1, q);
@@ -706,7 +706,7 @@ check (unsigned q[], unsigned r[], unsigned u[], unsigned v[], int m, int n,
         {
           if (l == 1)
             {
-              (void)fprintf (stderr, "\n");
+              (void)fprintf (stderr, "\n\n");
               dumpit ("FATAL ERROR: dividend u =", m, u);
               dumpit ("             divisor  v =", n, v);
               dumpit ("              remainder =", n, r);
@@ -1012,7 +1012,7 @@ main (void)
       .n     =                                                3  ,
       .u     = {          0, 0xfffffffe,          0, 0x80000000 },
       .v     = {             0xffffffff,          0, 0x80000000 },
-      .cq    = {                         0xffffffff,          1 },
+      .cq    = {                         0xffffffff,          0 },
       .cr    = {             0xffffffff, 0xffffffff, 0x7fffffff }
     },
   };
@@ -1037,7 +1037,7 @@ main (void)
           {
             if (l == 1)
               {
-                (void)fprintf (stderr, "\n");
+                (void)fprintf (stderr, "\n\n");
                 dumpit ("FATAL: Unexpected error for dividend u =", m, u);
                 dumpit ("                            divisor  v =", n, v);
                 kd_div_errors++;
@@ -1048,7 +1048,7 @@ main (void)
           {
             if (l == 1)
               {
-                (void)fprintf (stderr, "\n");
+                (void)fprintf (stderr, "\n\n");
                 dumpit ("FATAL: Unexpected success for dividend u =", m, u);
                 dumpit ("                              divisor  v =", n, v);
                 kd_div_errors++;
