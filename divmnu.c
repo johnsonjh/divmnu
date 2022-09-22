@@ -672,11 +672,11 @@ again:
 
 void
 check (unsigned q[], unsigned r[], unsigned u[], unsigned v[], int m, int n,
-       unsigned cq[], unsigned cr[]);
+       unsigned cq[], unsigned cr[], long l);
 
 void
 check (unsigned q[], unsigned r[], unsigned u[], unsigned v[], int m, int n,
-       unsigned cq[], unsigned cr[])
+       unsigned cq[], unsigned cr[], long l)
 {
   int i, szq;
 
@@ -686,12 +686,15 @@ check (unsigned q[], unsigned r[], unsigned u[], unsigned v[], int m, int n,
     {
       if (q[i] != cq[i])
         {
-          dumpit ("FATAL ERROR: dividend u =", m, u);
-          dumpit ("             divisor  v =", n, v);
-          dumpit ("              remainder =", m - n + 1, q);
-          dumpit ("              should be =", m - n + 1, cq);
-
-          kd_div_errors++;
+          if (l == 1)
+            {
+              (void)fprintf (stderr, "\n");
+              dumpit ("FATAL ERROR: dividend u =", m, u);
+              dumpit ("             divisor  v =", n, v);
+              dumpit ("              remainder =", m - n + 1, q);
+              dumpit ("              should be =", m - n + 1, cq);
+              kd_div_errors++;
+            }
 
           return;
         }
@@ -701,12 +704,15 @@ check (unsigned q[], unsigned r[], unsigned u[], unsigned v[], int m, int n,
     {
       if (r[i] != cr[i])
         {
-          dumpit ("FATAL ERROR: dividend u =", m, u);
-          dumpit ("             divisor  v =", n, v);
-          dumpit ("              remainder =", n, r);
-          dumpit ("              should be =", n, cr);
-
-          kd_div_errors++;
+          if (l == 1)
+            {
+              (void)fprintf (stderr, "\n");
+              dumpit ("FATAL ERROR: dividend u =", m, u);
+              dumpit ("             divisor  v =", n, v);
+              dumpit ("              remainder =", n, r);
+              dumpit ("              should be =", n, cr);
+              kd_div_errors++;
+            }
 
           return;
         }
@@ -1006,12 +1012,11 @@ main (void)
       .n     =                                                3  ,
       .u     = {          0, 0xfffffffe,          0, 0x80000000 },
       .v     = {             0xffffffff,          0, 0x80000000 },
-      .cq    = {                         0xffffffff,          0 },
+      .cq    = {                         0xffffffff,          1 },
       .cr    = {             0xffffffff, 0xffffffff, 0x7fffffff }
     },
   };
 
-  int ferror = 0;
   unsigned q[10], r[10];
   const int ncases = sizeof (test) / sizeof (test[0]);
   const long loops = 12000000L;
@@ -1030,37 +1035,34 @@ main (void)
 
         if (f && !test[i].error)
           {
-            if (ferror < 1)
+            if (l == 1)
               {
+                (void)fprintf (stderr, "\n");
                 dumpit ("FATAL: Unexpected error for dividend u =", m, u);
                 dumpit ("                            divisor  v =", n, v);
+                kd_div_errors++;
               }
-
-            if (ferror > 0)
-              kd_div_errors++;
-
-            ferror++;
           }
 
         else if (!f && test[i].error)
           {
-            if (ferror < 1)
+            if (l == 1)
               {
+                (void)fprintf (stderr, "\n");
                 dumpit ("FATAL: Unexpected success for dividend u =", m, u);
                 dumpit ("                              divisor  v =", n, v);
+                kd_div_errors++;
               }
-
-            if (ferror > 0)
-              kd_div_errors++;
-
-            ferror++;
           }
 
         if (!f)
-          check (q, r, u, v, m, n, cq, cr);
+          check (q, r, u, v, m, n, cq, cr, l);
       }
 
-  return (int)kd_div_errors;
+  if (kd_div_errors > 0)
+    return 1;
+  else
+    return 0;
 }
 
 /****************************************************************************/
