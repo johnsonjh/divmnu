@@ -15,7 +15,8 @@ UNIFDEF ?= unifdef
 ##############################################################################
 
 # GNU time
-XGTIME  ?= $(shell $(COMMAND) gtime || $(COMMAND) time)
+XGTIME  ?= $(shell $(COMMAND) gtime 2> /dev/null ||                          \
+                   $(COMMAND)  time 2> /dev/null)
 ifneq ($(XGTIME),)
   GTIME ?= $(XGTIME) -f '%E'
 else
