@@ -1,11 +1,24 @@
 # vim: set ft=make ts=8 sw=0 tw=0 noet list :
 ##############################################################################
 
-# Tools
-GREP   ?= grep
-PRINTF ?= printf
-RM     ?= rm -f
-SHELL  := /bin/sh
+# POSIX tools
+COMMAND ?= command -p -v
+GREP    ?= grep
+PRINTF  ?= printf
+RM      ?= rm -f
+SHELL   := /bin/sh
+TEST    := test
+TRUE    := true
+
+##############################################################################
+
+# GNU time
+XGTIME  ?= $(shell $(COMMAND) gtime || $(COMMAND) time)
+ifneq ($(XGTIME),)
+  GTIME ?= $(XGTIME) -f '%E'
+else
+  GTIME ?= time -p
+endif
 
 ##############################################################################
 
@@ -32,7 +45,7 @@ else
   V       = 0 # Verbose disabled
   SETV    = set +x; $(PRINTF) '\r\t Make %s ...\n' "$@" 2> /dev/null |      \
             $(GREP) -v "Make clean \.\.\.$$"            2> /dev/null |      \
-            $(GREP) -v "Make distclean \.\.\.$$ "       2> /dev/null |      \
+            $(GREP) -v "Make distclean \.\.\.$$"        2> /dev/null |      \
             $(GREP) -v "Make test \.\.\.$$"             2> /dev/null |      \
             $(GREP) -v "Make check \.\.\.$$"            2> /dev/null
 endif
@@ -90,13 +103,20 @@ OUT = divmnu-original                                                        \
 ##############################################################################
 
 # Default goal
-.DEFAULT_GOAL := test
+.DEFAULT_GOAL := all
 
 ##############################################################################
 
 # All goal
 .PHONY: all
-all: $(OUT)
+all:
+	+@$(MAKE) -s build && $(MAKE) -s test
+
+##############################################################################
+
+# Build goal
+.PHONY: build
+build: $(OUT)
 
 ##############################################################################
 
@@ -147,17 +167,17 @@ divmnu-madded_subfe: $(SOURCE)
 
 # Test goal
 .PHONY: test check
-test check: all
+test check: $(OUT)
 	@failed=0;                                                           \
 	 for test in $(OUT); do                                              \
-	   test $(V) -eq 1 > /dev/null 2>&1 &&                               \
-	     $(PRINTF) './%s\n'                                              \
-	       "$${test:?}" 2> /dev/null;                                    \
-	   test $(V) -ne 1 > /dev/null 2>&1 &&                               \
-	     $(PRINTF) '\r\t Test %s ...\n'                                  \
-	       "$${test:?}" 2> /dev/null;                                    \
-	   ./$${test:?} ||                                                   \
-	     $(PRINTF) '\r\t Failure %s ...\n\n'                             \
+	   $(TEST) $(V) -eq 1 > /dev/null 2>&1 &&                            \
+	     $(PRINTF) '%s ./%s\n'                                           \
+	       "$(GTIME)" "$${test:?}" 2> /dev/null;                         \
+	   $(TEST) $(V) -ne 1 > /dev/null 2>&1 &&                            \
+	     $(PRINTF) '\r\t Test %.34s '                                    \
+	       "$${test:?} ................................ " 2> /dev/null;  \
+	   $(GTIME) ./$${test:?} ||                                          \
+	     $(PRINTF) '\n\r\t Failure %s ...\n\n'                           \
 	       "$$(( failed=failed + 1 ))" 2> /dev/null;                     \
 	 done;                                                               \
 	 exit $${failed:?}
