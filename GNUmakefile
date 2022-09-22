@@ -176,9 +176,10 @@ test check: $(OUT)
 	   $(TEST) $(V) -ne 1 > /dev/null 2>&1 &&                            \
 	     $(PRINTF) '\r\t Test %.34s '                                    \
 	       "$${test:?} ................................ " 2> /dev/null;  \
-	   $(GTIME) ./$${test:?} ||                                          \
-	     $(PRINTF) '\n\r\t Failure %s ...\n\n'                           \
-	       "$$(( failed=failed + 1 ))" 2> /dev/null;                     \
+	       error=0; $(GTIME) ./$${test:?}; error=$$?;                    \
+	       test ${error:?} -eq 0 2> /dev/null ||                         \
+	         $(PRINTF) '\n\r\t Failure #%s (error %s)...\n\n'            \
+	           "$$(( failed=failed + 1 ))" "$${error:?}" 2> /dev/null;   \
 	 done;                                                               \
 	 exit $${failed:?}
 ifneq ($(V),1)
