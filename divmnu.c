@@ -1030,7 +1030,7 @@ main (void)
   const int ncases = sizeof (test) / sizeof (test[0]);
   const long loops = 12000000L;
 
-  for (long l = 0L; l < loops; l++)
+  for (long l = 0L; l <= loops; l++)
     for (int i = 0; i < ncases; i++)
       {
         int m        = test[i].m;
