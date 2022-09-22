@@ -639,8 +639,6 @@ again:
 
     bool need_fixup = !ca;
 
-/****************************************************************************/
-
 #else
 
 # error No algorithm selected!

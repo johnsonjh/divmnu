@@ -149,8 +149,9 @@ ifneq ($(V),1)
 	-@$(PRINTF) '\r\t %s\n' "Creating $@ ..." 2> /dev/null
 endif
 	@$(SETV); $(RM) standalone.c || $(TRUE)
-	@$(SETV); $(UNIFDEF) -B divmnu.c > standalone.c.$$$$ &&              \
-	  $(MV) standalone.c.$$$$ standalone.c
+	@$(SETV); $(UNIFDEF) -DORIGINAL -B divmnu.c > standalone.c.$$$$;     \
+	 $(TEST) -f standalone.c.$$$$ &&                                     \
+	   $(MV) standalone.c.$$$$ standalone.c
 
 ##############################################################################
 
