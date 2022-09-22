@@ -356,7 +356,9 @@ again:
 
     /* Use 3rd-from-top digit to obtain better accuracy */
 
-    if (rhat < b && qhat * vn[n - 2] > b * rhat + un[j + n - 2])
+    if (rhat < b &&
+     (unsigned)qhat * (unsigned long long)vn[n - 2] >
+     b * rhat + un[j + n - 2])
       {
         qhat = qhat - 1;
         rhat = rhat + vn[n - 1];
@@ -373,7 +375,7 @@ again:
 
     for (i = 0; i < n; i++)
       {
-        p = qhat * vn[i];
+        p = (unsigned)qhat * (unsigned long long)vn[i];
 
         t = (long long)( (long long)un[i + j] -
                (long long)k -
@@ -468,7 +470,7 @@ again:
       {
         uint64_t value = ( ( (uint64_t)phi[ii] << 32 ) |
                            plo[ii] ) - borrow;
-        borrow         = ~(value >> 32) + 1; /* -(uint32_t)(value >> 32); */
+        borrow         = ~(value >> 32) + 1;
         un[ii + j]     = (uint32_t)value;
       }
 
@@ -1009,12 +1011,12 @@ main (void)
     },
   };
 
+  int ferror = 0;
   unsigned q[10], r[10];
-
   const int ncases = sizeof (test) / sizeof (test[0]);
-  const int loops  = 5000000;
+  const long loops = 12000000L;
 
-  for (int l = 0; l < loops; l++)
+  for (long l = 0L; l < loops; l++)
     for (int i = 0; i < ncases; i++)
       {
         int m        = test[i].m;
@@ -1028,18 +1030,30 @@ main (void)
 
         if (f && !test[i].error)
           {
-            dumpit ("FATAL: Unexpected error for dividend u =", m, u);
-            dumpit ("                            divisor  v =", n, v);
+            if (ferror < 1)
+              {
+                dumpit ("FATAL: Unexpected error for dividend u =", m, u);
+                dumpit ("                            divisor  v =", n, v);
+              }
 
-            kd_div_errors++;
+            if (ferror > 0)
+              kd_div_errors++;
+
+            ferror++;
           }
 
         else if (!f && test[i].error)
           {
-            dumpit ("FATAL: Unexpected success for dividend u =", m, u);
-            dumpit ("                              divisor  v =", n, v);
+            if (ferror < 1)
+              {
+                dumpit ("FATAL: Unexpected success for dividend u =", m, u);
+                dumpit ("                              divisor  v =", n, v);
+              }
 
-            kd_div_errors++;
+            if (ferror > 0)
+              kd_div_errors++;
+
+            ferror++;
           }
 
         if (!f)
