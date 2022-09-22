@@ -733,10 +733,10 @@ check (unsigned q[], unsigned r[], unsigned u[], unsigned v[], int m, int n,
 /****************************************************************************/
 
 int
-main(void);
+divmnu_test (void);
 
 int
-main (void)
+divmnu_test (void)
 {
   static struct
   {
@@ -1075,3 +1075,12 @@ main (void)
 }
 
 /****************************************************************************/
+
+int
+main (void);
+
+int
+main (void)
+{
+  return divmnu_test();
+}
