@@ -1,4 +1,7 @@
 ```
+» gmake clean
+         Cleaning up ...
+
 » env CC="gcc" CFLAGS="-Ofast -march=native" gmake
          CC set to "gcc"
          CFLAGS set to "-Ofast -march=native"
@@ -19,4 +22,12 @@
          Test divmnu-mul_rsub_carry_2stage_2 ... 0:12.38
          Test divmnu-madded_subfe .............. 0:11.29
          Test completed successfully!
+
+» gmake standalone
+         Creating standalone.c ...
+
+» wc -l *.c | sort -n
+  831 standalone.c
+ 1084 divmnu.c
+ 1915 total
 ```
