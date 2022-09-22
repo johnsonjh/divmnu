@@ -4,11 +4,13 @@
 # POSIX tools
 COMMAND ?= command -p -v
 GREP    ?= grep
+MV      ?= mv -f
 PRINTF  ?= printf
 RM      ?= rm -f
 SHELL   := /bin/sh
 TEST    := test
 TRUE    := true
+UNIFDEF ?= unifdef
 
 ##############################################################################
 
@@ -47,7 +49,9 @@ else
             $(GREP) -v "Make clean \.\.\.$$"            2> /dev/null |      \
             $(GREP) -v "Make distclean \.\.\.$$"        2> /dev/null |      \
             $(GREP) -v "Make test \.\.\.$$"             2> /dev/null |      \
-            $(GREP) -v "Make check \.\.\.$$"            2> /dev/null
+            $(GREP) -v "Make check \.\.\.$$"            2> /dev/null |      \
+            $(GREP) -v "Make standalone \.\.\.$$"       2> /dev/null |      \
+            $(GREP) -v "Make standalone\.c \.\.\.$$"    2> /dev/null
 endif
 
 ##############################################################################
@@ -132,7 +136,21 @@ clean distclean:
 ifneq ($(V),1)
 	-@$(PRINTF) '\r\t %s\n' "Cleaning up ..." 2> /dev/null
 endif
-	@$(SETV); $(RM) $(OUT) core a.out *~ *.o *.ln *.s *.bak > /dev/null
+	@$(SETV); $(RM) $(OUT) core a.out standalone.c                       \
+	                       *~ *.o *.ln *.s *.bak > /dev/null
+
+##############################################################################
+
+# Standalone goal
+.PHONY: standalone
+standalone: standalone.c
+standalone.c: $(SOURCE)
+ifneq ($(V),1)
+	-@$(PRINTF) '\r\t %s\n' "Creating $@ ..." 2> /dev/null
+endif
+	@$(SETV); $(RM) standalone.c || $(TRUE)
+	@$(SETV); $(UNIFDEF) -B divmnu.c > standalone.c.$$$$ &&              \
+	  $(MV) standalone.c.$$$$ standalone.c
 
 ##############################################################################
 
