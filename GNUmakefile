@@ -183,7 +183,7 @@ test check: $(OUT)
 	     $(PRINTF) '\r\t Test %.34s '                                    \
 	       "$${test:?} ................................ " 2> /dev/null;  \
 	   error=0; $(GTIME) ./$${test:?}; error=$$?;                        \
-	   echo $${error:?}; test $${error:?} -eq 0 2> /dev/null ||          \
+	   test $${error:?} -eq 0 2> /dev/null ||                            \
 	     {                                                               \
 	       $(PRINTF) '\n\r\t Failure #%s (error %s) ...\n\n'             \
 	         "$$(( failed=failed + 1 ))" "$${error:?}" 2> /dev/null;     \
