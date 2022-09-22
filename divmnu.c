@@ -228,7 +228,12 @@ bigmulsub (unsigned long long qhat, unsigned vn[], unsigned un[],
 
   /* Multiply and subtract. */
 
+#ifdef __COMPCERT__
+  uint32_t product[1 + 65535 * 4];
+#else
   uint32_t product[n + 1];
+#endif /* ifdef __COMPCERT__ */
+
 
   (void)bigmul ( (uint32_t)qhat, product, vn, m, n );
 
@@ -312,7 +317,11 @@ divmnu (unsigned q[], unsigned r[], const unsigned u[], const unsigned v[],
    */
 
   s  = nlz (v[n - 1]);  /* 0 <= s <= 31. */
+#ifdef __COMPCERT__
+  vn = malloc(4 * 65535);
+#else
   vn = (unsigned *)alloca (4 * n);
+#endif /* ifdef __COMPCERT__ */
 
   for (i = n - 1; i > 0; i--)
     vn[i] = (unsigned int)( (v[i] << s) |
@@ -320,7 +329,12 @@ divmnu (unsigned q[], unsigned r[], const unsigned u[], const unsigned v[],
 
   vn[0] = v[0] << s;
 
+#ifdef __COMPCERT__
+  un    = malloc(2 * 65535 * 4);
+#else
   un    = (unsigned *)alloca ( 4 * (m + 1) );
+#endif /* ifdef __COMPCERT__ */
+
   un[m] = (unsigned int)( (unsigned long long)u[m - 1] >> (32 - s) );
 
   for (i = m - 1; i > 0; i--)
@@ -612,7 +626,11 @@ again:
     (void)t;
 
     uint32_t carry = 0;
+#ifdef __COMPCERT__
+    uint32_t product[1 + 65535 * 4];
+#else
     uint32_t product[n + 1];
+#endif /* ifdef __COMPCERT__ */
 
     /* VL = n + 1 */
     /* sv.madded product.v, vn.v, qhat.s, carry.s */
@@ -671,6 +689,11 @@ again:
 
       r[n - 1] = un[n - 1] >> s;
     }
+
+#ifdef __COMPCERT__
+  free(vn);
+  free(un);
+#endif /* ifdef __COMPCERT__ */
 
   return 0;
 }
