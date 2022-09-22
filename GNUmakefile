@@ -137,7 +137,7 @@ clean distclean:
 ifneq ($(V),1)
 	-@$(PRINTF) '\r\t %s\n' "Cleaning up ..." 2> /dev/null
 endif
-	@$(SETV); $(RM) $(OUT) core a.out standalone.c                       \
+	@$(SETV); $(RM) $(OUT) core a.out standalone.c standalone.c.*        \
 	                       *~ *.o *.ln *.s *.bak > /dev/null
 
 ##############################################################################
