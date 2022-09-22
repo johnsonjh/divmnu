@@ -86,7 +86,7 @@ typedef struct
 {
   uint32_t q;
   uint32_t r;
-  bool     overflow;
+  bool overflow;
   char pad[3];
 } divrem_t;
 
