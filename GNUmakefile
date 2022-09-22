@@ -56,9 +56,11 @@ endif
 CC ?= cc
 
 # Notify about non-default CC
-ifneq ($(V),1)
-  ifneq ($(CC),cc)
-    $(info $(BLANK)	 CC set to "$(CC)")
+ifneq ($(QUIETINIT),1)
+  ifneq ($(V),1)
+    ifneq ($(CC),cc)
+      $(info $(BLANK)	 CC set to "$(CC)")
+    endif
   endif
 endif
 
@@ -70,9 +72,11 @@ ifndef CFLAGS
 endif
 
 # Notify about non-default CFLAGS
-ifneq ($(V),1)
-  ifneq ($(CFLAGS),-Wall -O2)
-    $(info $(BLANK)	 CFLAGS set to "$(CFLAGS)")
+ifneq ($(QUIETINIT),1)
+  ifneq ($(V),1)
+    ifneq ($(CFLAGS),-Wall -O2)
+      $(info $(BLANK)	 CFLAGS set to "$(CFLAGS)")
+    endif
   endif
 endif
 
@@ -82,9 +86,11 @@ endif
 LDFLAGS  ?=
 
 # Notify about non-default LDFLAGS
-ifneq ($(V),1)
-  ifneq ($(LDFLAGS),)
-    $(info $(BLANK)	 LDFLAGS set to "$(LDFLAGS)")
+ifneq ($(QUIETINIT),1)
+  ifneq ($(V),1)
+    ifneq ($(LDFLAGS),)
+      $(info $(BLANK)	 LDFLAGS set to "$(LDFLAGS)")
+    endif
   endif
 endif
 
@@ -110,7 +116,7 @@ OUT = divmnu-original                                                        \
 # All goal
 .PHONY: all
 all:
-	+@$(MAKE) -s build && $(MAKE) -s test
+	+@env QUIETINIT=1 $(MAKE) -s build && env QUIETINIT=1 $(MAKE) -s test
 
 ##############################################################################
 
@@ -176,10 +182,12 @@ test check: $(OUT)
 	   $(TEST) $(V) -ne 1 > /dev/null 2>&1 &&                            \
 	     $(PRINTF) '\r\t Test %.34s '                                    \
 	       "$${test:?} ................................ " 2> /dev/null;  \
-	       error=0; $(GTIME) ./$${test:?}; error=$$?;                    \
-	       test ${error:?} -ne 0 2> /dev/null ||                         \
-	         $(PRINTF) '\n\r\t Failure #%s (error %s)...\n\n'            \
-	           "$$(( failed=failed + 1 ))" "$${error:?}" 2> /dev/null;   \
+	   error=0; $(GTIME) ./$${test:?}; error=$$?;                        \
+	   echo $${error:?}; test $${error:?} -eq 0 2> /dev/null ||          \
+	     {                                                               \
+	       $(PRINTF) '\n\r\t Failure #%s (error %s) ...\n\n'             \
+	         "$$(( failed=failed + 1 ))" "$${error:?}" 2> /dev/null;     \
+	     };                                                              \
 	 done;                                                               \
 	 exit $${failed:?}
 ifneq ($(V),1)

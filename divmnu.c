@@ -700,8 +700,8 @@ check (unsigned q[], unsigned r[], unsigned u[], unsigned v[], int m, int n,
               (void)fprintf (stderr, "\n\n");
               dumpit ("FATAL ERROR: dividend u =", m, u);
               dumpit ("             divisor  v =", n, v);
-              dumpit ("              remainder =", m - n + 1, q);
-              dumpit ("              should be =", m - n + 1, cq);
+              dumpit ("             remainder  =", m - n + 1, q);
+              dumpit ("             should be  =", m - n + 1, cq);
               kd_div_errors++;
             }
 
@@ -718,8 +718,8 @@ check (unsigned q[], unsigned r[], unsigned u[], unsigned v[], int m, int n,
               (void)fprintf (stderr, "\n\n");
               dumpit ("FATAL ERROR: dividend u =", m, u);
               dumpit ("             divisor  v =", n, v);
-              dumpit ("              remainder =", n, r);
-              dumpit ("              should be =", n, cr);
+              dumpit ("             remainder  =", n, r);
+              dumpit ("             should be  =", n, cr);
               kd_div_errors++;
             }
 
